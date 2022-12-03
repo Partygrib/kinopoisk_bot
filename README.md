@@ -26,14 +26,14 @@
 Далее будет предоставлен выбор среди 5 картин и опции, какую информацию можно получить о фильме.  
 Также обработаны ожидаемые ошибки ввода и отсутствия некоторой информации.
 
-![example_0](https://github.com/{username}/{repository}/raw/{branch}/{path}/image.png)
+![example_0](https://github.com/Partygrib/rotten_tom_bot/blob/main/resources/example_0.PNG)
 
-![example_1](https://github.com/{username}/{repository}/raw/{branch}/{path}/image.png)
+![example_1](https://github.com/Partygrib/rotten_tom_bot/blob/main/resources/example_1.PNG)
 
-![example_2](https://github.com/{username}/{repository}/raw/{branch}/{path}/image.png)
+![example_2](https://github.com/Partygrib/rotten_tom_bot/blob/main/resources/example_2.PNG)
 
-![example_3](https://github.com/{username}/{repository}/raw/{branch}/{path}/image.png)
+![example_3](https://github.com/Partygrib/rotten_tom_bot/blob/main/resources/example_3.PNG)
 
-![example_4](https://github.com/{username}/{repository}/raw/{branch}/{path}/image.png)
+![example_4](https://github.com/Partygrib/rotten_tom_bot/blob/main/resources/example_4.PNG)
 
-![example_5](https://github.com/{username}/{repository}/raw/{branch}/{path}/image.png)
+![example_5](https://github.com/Partygrib/rotten_tom_bot/blob/main/resources/example_5.PNG)
