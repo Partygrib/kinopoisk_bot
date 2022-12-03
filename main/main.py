@@ -32,11 +32,22 @@ def search_full(url):
     moviesGenre = soup.find('p', class_='scoreboard__info')
     cons = soup.find('p', class_='what-to-know__section-body')
     dirs = soup.findAll('li', class_='meta-row clearfix')
+    moviesRateA = soup.find('score-board')['audiencescore']
+    moviesRateK = soup.find('score-board')['tomatometerscore']
+
 
     scraped = []
 
     if moviesGenre is not None:
         scraped.append(moviesGenre.text)
+    else:
+        scraped.append('Отсутствует информация')
+    if moviesRateA != '':
+        scraped.append(moviesRateA)
+    else:
+        scraped.append('Отсутствует информация')
+    if moviesRateK != '':
+        scraped.append(moviesRateK)
     else:
         scraped.append('Отсутствует информация')
     if cons is not None:
@@ -150,6 +161,8 @@ def get_param(message):
     keyboard2 = types.InlineKeyboardMarkup()  # наша клавиатура
     key1 = types.InlineKeyboardButton(text='Год, Жанр, Продолжительность', callback_data='6')
     keyboard2.add(key1)
+    key2 = types.InlineKeyboardButton(text='Оценки', callback_data='7')
+    keyboard2.add(key2)
     key4 = types.InlineKeyboardButton(text='Что говорят критики', callback_data='9')
     keyboard2.add(key4)
     key5 = types.InlineKeyboardButton(text='Режиссеры', callback_data='10')
@@ -186,10 +199,13 @@ def callback_worker(call):
         bot.register_next_step_handler(call.message, get_prom)
     elif call.data == "6":
         bot.send_message(call.message.chat.id, parameters[0])
+    elif call.data == "7":
+        bot.send_message(call.message.chat.id, 'Пользовательская оценка: ' + parameters[1] + "\n"
+                         + 'Оценка критиков: ' + parameters[2])
     elif call.data == "9":
-        bot.send_message(call.message.chat.id, parameters[1])
+        bot.send_message(call.message.chat.id, parameters[3])
     elif call.data == "10":
-        bot.send_message(call.message.chat.id, parameters[2])
+        bot.send_message(call.message.chat.id, parameters[4])
     elif call.data == "12":
         bot.send_message(call.message.chat.id, actors)
     elif call.data == "13":
