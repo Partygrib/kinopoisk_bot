@@ -13,15 +13,18 @@ def search_film(name):
     print(page.status_code)
     soup = BeautifulSoup(page.text, "html.parser")
     onlyMoves = soup.find('search-page-result', type="movie")
-    movies = onlyMoves.findAll('search-page-media-row')
     scraped = []
 
-    for move in movies:
-        year = move['releaseyear']
-        link = move.a['href']
-        names = move.findAll('a', class_='unset')
-        cast = move['cast']
-        scraped.append([names[1].text.strip(), year, link, cast])
+    if onlyMoves is None:
+        scraped.append(['er', 'er', 'er', 'er'])
+    else:
+        movies = onlyMoves.findAll('search-page-media-row')
+        for move in movies:
+            year = move['releaseyear']
+            link = move.a['href']
+            names = move.findAll('a', class_='unset')
+            cast = move['cast']
+            scraped.append([names[1].text.strip(), year, link, cast])
 
     return scraped
 
@@ -34,6 +37,7 @@ def search_full(url):
     moviesGenre = soup.find('p', class_='scoreboard__info')
     cons = soup.find('p', class_='what-to-know__section-body')
     dirs = soup.findAll('li', class_='meta-row clearfix')
+    directorF = ''
     moviesRateA = soup.find('score-board')['audiencescore']
     moviesRateK = soup.find('score-board')['tomatometerscore']
 
@@ -61,8 +65,10 @@ def search_full(url):
                 director = dir.text.strip()
                 director = director.replace("\n", "")
                 director = director.replace("\r", "")
-                director = director.replace("Director:", "")
-        scraped.append(director)
+                directorF = director.replace("Director:", "")
+                scraped.append(directorF)
+        if directorF == '':
+            scraped.append('Отсутствует информация')
     else:
         scraped.append('Отсутствует информация')
 
@@ -102,6 +108,7 @@ def search_pic(url):
 
     return movies3
 
+
 # bot
 bot = telebot.TeleBot("5617127293:AAFNjtGv6hQfj4ohxJV3sOQLAXr9gEJeqjg")
 
@@ -119,7 +126,7 @@ def get_name(message):
     global film
     film = search_film(message.text)
 
-    if not film:
+    if not film or film[0][0] == 'er':
         bot.send_message(message.from_user.id, 'Такого фильма не существует, попробуйте еще раз')
         bot.register_next_step_handler(message, get_name)
     else:
@@ -130,7 +137,7 @@ def get_name(message):
 def get_var_names(message):
     keyboard = types.InlineKeyboardMarkup()  # наша клавиатура
 
-    if len(film) < 5:
+    if len(film) < 5 and len(film) != 0:
         key1 = types.InlineKeyboardButton(text=film[0][0] + ' - ' + film[0][1], callback_data='1')
         keyboard.add(key1)
         question = 'Какой фильм?'
@@ -172,23 +179,23 @@ def get_prom(message):
 
 
 def get_param(message):
-    keyboard2 = types.InlineKeyboardMarkup()  # наша клавиатура
+    keyboard3 = types.InlineKeyboardMarkup()  # наша клавиатура
     key1 = types.InlineKeyboardButton(text='Год, Жанр, Продолжительность', callback_data='6')
-    keyboard2.add(key1)
+    keyboard3.add(key1)
     key2 = types.InlineKeyboardButton(text='Оценки', callback_data='7')
-    keyboard2.add(key2)
+    keyboard3.add(key2)
     key4 = types.InlineKeyboardButton(text='Что говорят критики', callback_data='9')
-    keyboard2.add(key4)
+    keyboard3.add(key4)
     key5 = types.InlineKeyboardButton(text='Режиссеры', callback_data='10')
-    keyboard2.add(key5)
+    keyboard3.add(key5)
     key6 = types.InlineKeyboardButton(text='Постер', callback_data='11')
-    keyboard2.add(key6)
+    keyboard3.add(key6)
     key7 = types.InlineKeyboardButton(text='Актеры', callback_data='12')
-    keyboard2.add(key7)
+    keyboard3.add(key7)
     key8 = types.InlineKeyboardButton(text='Назад', callback_data='13')
-    keyboard2.add(key8)
+    keyboard3.add(key8)
     question = 'Что конкретно ты хочешь узнать об этом фильме?'
-    bot.send_message(message.from_user.id, text=question, reply_markup=keyboard2)
+    bot.send_message(message.from_user.id, text=question, reply_markup=keyboard3)
 
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -198,22 +205,27 @@ def callback_worker(call):
         cor_film = film[0][2]
         bot.send_message(call.message.chat.id, film[0][2])
         bot.register_next_step_handler(call.message, get_prom)
+        bot.send_message(call.message.chat.id, 'Чтобы перейти в следующее меню напиши любое сообщение :)')
     elif call.data == "2":
         bot.send_message(call.message.chat.id, film[1][2])
         cor_film = film[1][2]
         bot.register_next_step_handler(call.message, get_prom)
+        bot.send_message(call.message.chat.id, 'Чтобы перейти в следующее меню напиши любое сообщение :)')
     elif call.data == "3":
         bot.send_message(call.message.chat.id, film[2][2])
         cor_film = film[2][2]
         bot.register_next_step_handler(call.message, get_prom)
+        bot.send_message(call.message.chat.id, 'Чтобы перейти в следующее меню напиши любое сообщение :)')
     elif call.data == "4":
         bot.send_message(call.message.chat.id, film[3][2])
         cor_film = film[3][2]
         bot.register_next_step_handler(call.message, get_prom)
+        bot.send_message(call.message.chat.id, 'Чтобы перейти в следующее меню напиши любое сообщение :)')
     elif call.data == "5":
         bot.send_message(call.message.chat.id, film[4][2])
         cor_film = film[4][2]
         bot.register_next_step_handler(call.message, get_prom)
+        bot.send_message(call.message.chat.id, 'Чтобы перейти в следующее меню напиши любое сообщение :)')
     elif call.data == "6":
         bot.send_message(call.message.chat.id, parameters[0])
     elif call.data == "7":
@@ -222,7 +234,7 @@ def callback_worker(call):
         else:
             mid = (int(parameters[1]) + int(parameters[2])) / 2
             bot.send_message(call.message.chat.id, 'Пользовательская оценка: ' + parameters[1] + "\n"
-                         + 'Оценка критиков: ' + parameters[2] + "\n" + 'Средняя оценка: ' + str(mid))
+                             + 'Оценка критиков: ' + parameters[2] + "\n" + 'Средняя оценка: ' + str(mid))
     elif call.data == "9":
         bot.send_message(call.message.chat.id, parameters[3])
     elif call.data == "10":
@@ -236,8 +248,10 @@ def callback_worker(call):
         bot.send_message(call.message.chat.id, actors)
     elif call.data == "13":
         bot.register_next_step_handler(call.message, get_prom)
+        bot.send_message(call.message.chat.id, 'Чтобы перейти в следующее меню напиши любое сообщение :)')
     elif call.data == "14":
         bot.register_next_step_handler(call.message, get_param)
+        bot.send_message(call.message.chat.id, 'Чтобы перейти в следующее меню напиши любое сообщение :)')
     elif call.data == "15":
         if pictures != 'Постер отсутствует':
             bot.send_photo(call.message.chat.id, pictures)
@@ -257,8 +271,10 @@ def callback_worker(call):
 
     elif call.data == "16":
         bot.register_next_step_handler(call.message, get_var_names)
+        bot.send_message(call.message.chat.id, 'Чтобы вернуться в предыдущее меню напиши любое сообщение :)')
     elif call.data == "17":
-        bot.register_next_step_handler(call.message, start)
+        bot.register_next_step_handler(call.message, get_name)
+        bot.send_message(call.message.chat.id, 'Какой фильм ты ищешь?')
 
 
-bot.infinity_polling()
+bot.polling()
