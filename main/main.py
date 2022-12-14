@@ -94,6 +94,18 @@ def search_actors(url):
     return ss.strip()
 
 
+def search_pic(url):
+    page = requests.get(url)
+    soup = BeautifulSoup(page.text, "html.parser")
+
+    movies3 = soup.find('img', class_='posterImage')['src']
+
+    if movies3 == '/assets/pizza-pie/images/poster_default.c8c896e70c3.gif':
+        movies3 = 'Постер отсутствует'
+
+    return movies3
+
+
 # bot
 bot = telebot.TeleBot("5617127293:AAFNjtGv6hQfj4ohxJV3sOQLAXr9gEJeqjg")
 
@@ -145,8 +157,10 @@ def get_var_names(message):
 def get_prom(message):
     global parameters
     global actors
+    global pictures
     parameters = search_full(cor_film)
     actors = search_actors(cor_film)
+    pictures = search_pic(cor_film)
 
     keyboard2 = types.InlineKeyboardMarkup()  # наша клавиатура
     key1 = types.InlineKeyboardButton(text='Выборочная информация', callback_data='14')
@@ -171,6 +185,8 @@ def get_param(message):
     keyboard2.add(key4)
     key5 = types.InlineKeyboardButton(text='Режиссеры', callback_data='10')
     keyboard2.add(key5)
+    key6 = types.InlineKeyboardButton(text='Постер', callback_data='11')
+    keyboard2.add(key6)
     key7 = types.InlineKeyboardButton(text='Актеры', callback_data='12')
     keyboard2.add(key7)
     key8 = types.InlineKeyboardButton(text='Назад', callback_data='13')
@@ -215,11 +231,16 @@ def callback_worker(call):
         else:
             mid = (int(parameters[1]) + int(parameters[2])) / 2
             bot.send_message(call.message.chat.id, 'Пользовательская оценка: ' + parameters[1] + "\n"
-                         + 'Оценка критиков: ' + parameters[2] + "\n" + 'Средняя оценка: ' + str(mid))
+                             + 'Оценка критиков: ' + parameters[2] + "\n" + 'Средняя оценка: ' + str(mid))
     elif call.data == "9":
         bot.send_message(call.message.chat.id, parameters[3])
     elif call.data == "10":
         bot.send_message(call.message.chat.id, parameters[4])
+    elif call.data == "11":
+        if pictures != 'Постер отсутствует':
+            bot.send_photo(call.message.chat.id, pictures)
+        else:
+            bot.send_message(call.message.chat.id, pictures)
     elif call.data == "12":
         bot.send_message(call.message.chat.id, actors)
     elif call.data == "13":
