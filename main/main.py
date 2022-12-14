@@ -245,17 +245,24 @@ def callback_worker(call):
         bot.send_message(call.message.chat.id, actors)
     elif call.data == "13":
         bot.register_next_step_handler(call.message, get_prom)
+        bot.send_message(call.message.chat.id, 'Чтобы перейти в следующее меню напиши любое сообщение :)')
     elif call.data == "14":
         bot.register_next_step_handler(call.message, get_param)
+        bot.send_message(call.message.chat.id, 'Чтобы перейти в следующее меню напиши любое сообщение :)')
     elif call.data == "15":
         if pictures != 'Постер отсутствует':
             bot.send_photo(call.message.chat.id, pictures)
         else:
             bot.send_message(call.message.chat.id, pictures)
+        if parameters[1] == 'Отсутствует информация' or parameters[2] == 'Отсутствует информация':
+            infoRate = 'Отсутствует информация об оценках' + "\n"
+        else:
+            mid = (int(parameters[1]) + int(parameters[2])) / 2
+            infoRate = 'Пользовательская оценка: ' + parameters[1] + "\n" + 'Оценка критиков: ' \
+                       + parameters[2] + "\n" + 'Средняя оценка: ' + str(mid) + "\n"
 
-        bot.send_message(call.message.chat.id, parameters[0] + "\n" + 'Пользовательская оценка: '
-                         + parameters[1] + "\n" + 'Оценка критиков: ' + parameters[2] + "\n"
-                         + parameters[3] + "\n" + 'Режиссеры: ' + parameters[4] + "\n"
+        bot.send_message(call.message.chat.id, parameters[0] + "\n" + infoRate + parameters[3]
+                         + "\n" + 'Режиссеры: ' + parameters[4] + "\n"
                          + 'Актерский состав: ' + "\n" + actors)
     elif call.data == "16":
         bot.register_next_step_handler(call.message, get_var_names)
