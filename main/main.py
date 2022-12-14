@@ -274,4 +274,4 @@ def callback_worker(call):
 
 bot.polling()
 
-#ready for release
+#ready for release v.1
