@@ -247,6 +247,16 @@ def callback_worker(call):
         bot.register_next_step_handler(call.message, get_prom)
     elif call.data == "14":
         bot.register_next_step_handler(call.message, get_param)
+    elif call.data == "15":
+        if pictures != 'Постер отсутствует':
+            bot.send_photo(call.message.chat.id, pictures)
+        else:
+            bot.send_message(call.message.chat.id, pictures)
+
+        bot.send_message(call.message.chat.id, parameters[0] + "\n" + 'Пользовательская оценка: '
+                         + parameters[1] + "\n" + 'Оценка критиков: ' + parameters[2] + "\n"
+                         + parameters[3] + "\n" + 'Режиссеры: ' + parameters[4] + "\n"
+                         + 'Актерский состав: ' + "\n" + actors)
     elif call.data == "16":
         bot.register_next_step_handler(call.message, get_var_names)
         bot.send_message(call.message.chat.id, 'Чтобы вернуться в предыдущее меню напиши любое сообщение :)')
