@@ -210,8 +210,12 @@ def callback_worker(call):
     elif call.data == "6":
         bot.send_message(call.message.chat.id, parameters[0])
     elif call.data == "7":
-        bot.send_message(call.message.chat.id, 'Пользовательская оценка: ' + parameters[1] + "\n"
-                         + 'Оценка критиков: ' + parameters[2])
+        if parameters[1] == 'Отсутствует информация' or parameters[2] == 'Отсутствует информация':
+            bot.send_message(call.message.chat.id, 'Отсутствует информация об оценках')
+        else:
+            mid = (int(parameters[1]) + int(parameters[2])) / 2
+            bot.send_message(call.message.chat.id, 'Пользовательская оценка: ' + parameters[1] + "\n"
+                         + 'Оценка критиков: ' + parameters[2] + "\n" + 'Средняя оценка: ' + str(mid))
     elif call.data == "9":
         bot.send_message(call.message.chat.id, parameters[3])
     elif call.data == "10":
