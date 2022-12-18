@@ -2,6 +2,10 @@
 Телеграм бот, который получает на вход название фильма и возвращает основную информацию о нем.   
 Источник: https://www.rottentomatoes.com/
 
+## Тест
+
+![tests](https://github.com/Partygrib/rotten_tom_bot/actions/workflows/tests.yml/badge.svg)
+
 ## Как запустить?  
 ### Используя Docker:  
 Запустите терминал в папке проекта.   
